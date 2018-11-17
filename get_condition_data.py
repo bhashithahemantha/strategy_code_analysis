@@ -65,46 +65,7 @@ for str_num in (range(1, int(no_of_strategies)+1)):
 
     print (entry_conditions)
 
-    for token in entry_tokens:
-        for i, j in enumerate (entry_tokens):
-            # take the start and end points for action data
-            if j == 'begin':
-                if entry_tokens[ i + 2 ].lower() == "buy":
-                    buy_act_start = i + 2
 
-                if entry_tokens[ i + 2 ].lower() == "sell":
-                    sell_act_start = i + 2
-
-            elif j == "end":
-                if entry_tokens[i + 1].lower() == ';':
-                    if entry_tokens[i+4].lower() == 'if':
-                        buy_act_end = i - 2
-
-                if entry_tokens[i + 1].lower() == ';':
-                    if entry_tokens[i+4].lower() == '{':
-                        sell_act_end = i - 2
-                        break
-        break
-
-    buy_act_tokens = entry_tokens[ buy_act_start: buy_act_end ]
-    sell_act_tokens = entry_tokens[ sell_act_start: sell_act_end ]
-    print(buy_act_tokens)
-    print(sell_act_tokens)
-
-    for token in buy_act_tokens:
-        if not token == None:
-            continue
-        elif token == ';':
-            entry_actions.append(entry_current_action)
-        elif token.isdecimal ():  # Detect numbers
-            try:
-                entry_current_action.append (int (token))
-            except ValueError:
-                entry_current_action.append (float (token))
-        else:  # otherwise just take the string
-            entry_current_action.append (token)
-
-    print(entry_actions)
 
 
 
