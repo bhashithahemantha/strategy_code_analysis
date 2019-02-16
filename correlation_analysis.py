@@ -2,15 +2,19 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
+import encoding_data as ed
 from data_store_retrieve import DatabaseModel
 
 
-# retrieve data from db - conf = 'ES_DAILY' or ....
-def retrieve_data(conf):
-    retrieved_data = DatabaseModel (conf).find_all ({})
+
+def retrieve_data():
+    data_retrieved = DatabaseModel ('CL_30').find_all ({})
+    # drop _id from mongo
+    data = pd.DataFrame (data_retrieved).drop ([ '_id' ], axis=1)
+    data = ed.data_encoding (data)
 
     # creating a data frame from retrieved data
-    data_frame = pd.DataFrame(data=retrieved_data)
+    data_frame = pd.DataFrame(data=data)
 
     # creating a list from the data frame
     attribute_list = list(data_frame.keys())
@@ -46,15 +50,16 @@ def correlation_plot(data_set):
     plt.matshow(data_set.corr())
     plt.xticks (range (len (data_set.columns)), data_set.columns);
     plt.yticks (range (len (data_set.columns)), data_set.columns);
-    plt.title('ES_DAILY')
+    plt.title('CL_DAILY')
     plt.show()
+    # plt.savefig ("correlation_analysis_encoded_data.png")
 
 
 # plot the correlation plot
-data = retrieve_data("ES_DAILY")
+data = retrieve_data()
 correlation_plot(data)
-# data_set = data.describe()
-# correlation_matrix = np.corrcoef(data.T)
-# with pd.option_context ('display.max_rows', None, 'display.max_columns', None):
-    # print (correlation_matrix)
 
+data_set = data.describe()
+correlation_matrix = np.corrcoef(data.T)
+with pd.option_context ('display.max_rows', None, 'display.max_columns', None):
+    print (correlation_matrix)
